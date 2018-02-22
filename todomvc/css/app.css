@@ -1,0 +1,17 @@
+/*
+
+app-template.css overrides
+
+remove this comment if used
+remove this file if not
+
+*/
+.foot_menu{
+	text-decoration: none;
+	color: #aaa;
+	cursor: pointer;
+
+}
+.foot_menu:hover{
+	border: 1px solid rgba(175, 47, 47, 0.2);
+}

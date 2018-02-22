@@ -1,0 +1,194 @@
+1.AngularJS是一种MVC前端框架
+2.AngularJS特点
+	Jquery只是一个类库(以dom为核心)
+	Angular则是一个框架(诸多类库集合)，以数据和逻辑作为驱动
+	Angular最核心的是：模块化，双向数据绑定，语义化标签，依赖注入等
+
+3.官网下载，bpm下载，bower下载
+4.MVC
+	MVC是一种开发模式，模型(modal)，试图(View)，控制器(Controller)
+		Modal一般用来处理数据(读取，设置)一般指操作数据库
+		View一般用来展示数据，比如通过HTML展示
+		Controller一般用来做链接模型和试图的桥梁
+	
+二.模块化
+
+
+引入Angluar的时候，提供一个全局对象
+	//一个页面可以有多个模型，但不能相互嵌套
+	其中module方法可以帮我们创建一个模块
+	var App=angular.module('app',[])  //angular.module("模块名称",[依赖])
+	App就是新创建的模块，即对象，有很多方法，实现具体逻辑
+
+	//创建一个控制器
+	App.controller("Demo",['$scrop',function($scrop){}])
+
+		//$scrop 是一个空对象{}，此对象就是Modal
+
+	ng-repeat循环 ng-repeat="(key,内容) in 数组"
+为任意一个html添加一个ng-app申明一个应用，
+
+
+三.自定义指令
+
+
+//内置指令
+//可自行封装指令
+	a)directive('指令名',function(){//函数体})
+
+
+四.数据绑定(模型数据与视图的关联关系就是数据绑定)
+	1.angularJS以数据为驱动
+	2.ng-bind,{{}}  {{}}会有闪烁现象，可添加ng-clock解决，ng-bind-template
+	3.视图向模型传递数据(双向绑定) //要实现数据从试图向模型传递数据，需要借助表单
+		ng-model关联到模型
+	4.相关指令
+		ng-switch:循环
+		ng-switch-on=""
+		ng-switch-when=""
+	angularJS自定义的html属性和标签，一般以ng-开头
+
+五.作用域
+	同JS
+
+六.过滤器
+	在{{}}中用|调用过滤器,用:传递参数
+	1.内置过滤器	
+		currency 货币
+		data 日期
+		filter: 过滤
+		limitTo:截取数字或者数组
+		lowercase uppercase 转换大小写
+		number:转换数字，参数为保留位数
+		orderBy:对数组进行排序
+			第二个参数可以控制，true降序，false升序
+			第一个参数，如果是对象，可用属性排序
+
+	2.自定义过滤器
+		filter方法
+		App.filter("demo",function(){
+			return function(input){
+				return 'hello'+input;
+			}
+		})
+
+七.依赖注入
+	查找依赖模块，然后注入给开发者
+
+八.服务
+	服务是一个对象或函数，对外提供特定的功能
+
+	1.内置服务
+		$localtion,获取地址相关的方法
+			地址的若干部分组成
+			http://协议
+			www.baidu.com 主机
+			:8080 端口
+			#abc 锚点
+			？name="123"查询参数(querystring)
+
+		$http用户向服务器发送异步请求
+			//原生JS发送请求方式		
+			// var xhr=new XMLHttpRequest();
+			
+			// xhr.open('get/post','text.php');
+
+			// xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+
+			// xhr.send('name=itacase');
+
+			// $.Ajax{
+			// 	url:
+			// 	type:get/post
+			// sucess:function(){
+
+			// 		}
+			// }
+
+			// Angular
+			// $.http({
+			// 	url：
+			// 	method:
+			// 	heads:'application/x-www-form-rulencoded'
+			// 	param:{
+			// 		get方式
+			// 		name:'itcase'
+			// 	}
+			// 	data:{
+			// 		post方式
+			// 		age:10;
+			// 	}
+			// })
+
+		jsonp跨域解决方案：
+			$http({
+ 				url:'test.php',
+ 				method:'jsonp',
+ 				params:{//get 参数	
+ 					call:'JSON_CALLBACK'
+ 				},
+ 			}).success(function(info){
+ 				//info就是返回的参数
+ 			});
+
+ 		自定义服务
+ 		//factory,service,value
+ 		App.factory('name',['$filter',function($filter){
+ 			//自定义服务，但依赖于$filter
+ 			
+ 			return function(arg){
+ 				var s='';
+ 				for(var key in arg){
+ 					s+=key+'='+arg[key];
+ 				}
+ 				s=s.slice(0,-1);
+ 			}
+ 		}]);
+
+ 		App.service('showTime',['$filter',function(){
+ 				this.showTime=function(){
+ 					return 
+ 				}
+ 		}])
+
+ 		从本质上看是一个服务
+ 		从表现形式上更像是一个常量
+ 		App.value('author','name');
+
+九.模块加载
+	//JS尽力不要放在head里面
+	//雅虎十三条
+	配置块
+		通过donfig方法对模块和服务进行配置,Angular中大部门的服务都对应一个provider，用来配置服务和功能
+		允许一次配置多个服务(块)
+		App.config('[$logProvider',function($logProvider){
+			$logProvider.debugEnable(false);
+		}]);
+
+	运行块
+
+十.路由
+	前端的路由就是指浏览器#后面的哈希值
+	路由的使用方式：
+		1.引入路由插件
+		2.配置路由
+			App.config(['$routeProvider',function($routeProvider){
+				$routeProvider.when('/index',{
+					templateUrl:'abc.html',
+					controller:'IndexController'
+				})
+				.otherwise({
+					redirectTo:'/index'
+				});
+			}]);
+		3.配置路由的第一个参数是哈希值，第二参数是一个对象，
+				a.template 字符串形式的视图模板
+				b.templateUrl 引入外部视图模板
+				c.controller 视图模板所属的控制器
+				d.rediectTo 跳转到其他路由
+		4.在控制中，注入$routeParams可以获取传递的参数
+				提供了一个专门获取参数的服务$routeParams
+
+
+
+
